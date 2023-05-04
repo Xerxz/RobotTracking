@@ -1,6 +1,7 @@
 import math
 import cv2
 import matplotlib
+import numpy as np
 from matplotlib import pyplot as plt
 
 global ground_truth_angles
@@ -58,9 +59,12 @@ def plot_angle_histogram():
     min_diff = int(min(filtered_differences) // 10) * 10
     max_diff = int((max(filtered_differences) // 10) + 1) * 10
 
-    plt.hist(differences, bins=range(min_diff, max_diff+10, 10), edgecolor='black', alpha=0.7)
+    # Calculate the weights to normalize the histogram counts
+    weights = np.ones_like(filtered_differences) / len(filtered_differences)
+
+    plt.hist(filtered_differences, bins=range(min_diff, max_diff+1, 1), weights=weights, edgecolor='black', alpha=0.7)
     plt.xlabel('Angle Difference (Degrees)')
-    plt.ylabel('Frequency')
-    plt.title(f'{len(filtered_differences)}: Histogram of Angle Differences Between Ground Truth and Predicted')
+    plt.ylabel('Percentage')
+    plt.title(f'{len(filtered_differences)}: Histogram of Angle Differences Between Ground Truth and Predicted (Vehicle 1)')
     plt.show()
 
